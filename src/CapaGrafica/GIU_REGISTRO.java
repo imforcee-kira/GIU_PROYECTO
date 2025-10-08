@@ -69,6 +69,11 @@ public class GIU_REGISTRO extends javax.swing.JFrame {
         });
 
         btnLogin.setText("Iniciar Sesion");
+        btnLogin.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLoginActionPerformed(evt);
+            }
+        });
 
         comboRol.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Docente", "Alumno", " " }));
         comboRol.addItemListener(new java.awt.event.ItemListener() {
@@ -190,6 +195,18 @@ public class GIU_REGISTRO extends javax.swing.JFrame {
     private void comboRolItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_comboRolItemStateChanged
         // TODO add your handling code here:
     }//GEN-LAST:event_comboRolItemStateChanged
+
+    private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
+        GIU_LOGIN ventana = new GIU_LOGIN();
+        ventana.setVisible(true);
+        ventana.setSize(400, 300); 
+        
+       
+        dispose();
+        
+        
+        
+    }//GEN-LAST:event_btnLoginActionPerformed
 
     /**
      * @param args the command line arguments
