@@ -12,15 +12,15 @@ import java.sql.SQLException;
 public class Registro {
 
    
-    private static final String SQL_REGISTRO = ("INSERT INTO usuario (nombreUsuario,contraseña,ci,rol) VALUES (?,?,?,?)");
-    private static final String SQL_LOGIN = ("SELECT  * FROM usuario WHERE ci = ? AND contraseña = ?");
+    private static final String SQL_REGISTRO = ("INSERT INTO usuarios (nombreUsuario,contraseña,ci,rol) VALUES (?,?,?,?)");
+    private static final String SQL_LOGIN = ("SELECT  * FROM usuarios WHERE ci = ? AND contraseña = ?");
 
     public Conexion cone = new Conexion();
     public PreparedStatement ps;
     public ResultSet rs;
     private boolean resultado;
 
-    public void registroUsuario(String nombreUsuario, String contraseña, String CI, String rol) throws Exception {
+    public void registroUsuario(String nombreUsuario, String contraseña, String ci, String rol) throws Exception {
 
         
 
@@ -31,7 +31,7 @@ public class Registro {
 
             ps.setString(1, nombreUsuario);
             ps.setString(2, contraseña);
-            ps.setString(3, CI);
+            ps.setString(3, ci);
             ps.setString(4, rol);
 
             int resultado = ps.executeUpdate();
@@ -51,9 +51,10 @@ public class Registro {
         }
     }
 
-    public boolean iniciar(String ci, String contraseña, String rol) throws Exception {
-        resultado = false;
-       
+    public String iniciar(String ci, String contraseña) throws Exception {
+        String rolObtenido = null;
+        String usuarioObtenido = null;
+        String resultadoString = null;
        
 
         try {
@@ -68,7 +69,9 @@ public class Registro {
             rs = ps.executeQuery();
 
             if (rs.next()) {
-                resultado = true;
+                rolObtenido = rs.getString("rol");
+                usuarioObtenido = rs.getString("nombreUsuario");
+                resultadoString = rolObtenido + "|" + usuarioObtenido;
 
             }
 
@@ -78,6 +81,7 @@ public class Registro {
                     + "    }edenciales.");
 
         }
-        return resultado;
-    }
-} 
+        
+    return resultadoString;
+    } 
+}

@@ -15,7 +15,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 public class GIU_REGISTRO extends javax.swing.JFrame {
-    
+    PantallaInicial ventanaInicial = new PantallaInicial();
     String rolLog;
     String nombreLog;
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(GIU_REGISTRO.class.getName());
@@ -43,9 +43,9 @@ public class GIU_REGISTRO extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
-        btnRegistrar = new javax.swing.JButton();
-        btnLogin = new javax.swing.JButton();
+        btnAtras = new javax.swing.JButton();
         comboRol = new javax.swing.JComboBox<>();
+        btnRegistrar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -63,17 +63,10 @@ public class GIU_REGISTRO extends javax.swing.JFrame {
 
         jLabel3.setText("Cedula");
 
-        btnRegistrar.setText("Registrar");
-        btnRegistrar.addActionListener(new java.awt.event.ActionListener() {
+        btnAtras.setText("Registrar");
+        btnAtras.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnRegistrarActionPerformed(evt);
-            }
-        });
-
-        btnLogin.setText("Iniciar Sesion");
-        btnLogin.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnLoginActionPerformed(evt);
+                btnAtrasActionPerformed(evt);
             }
         });
 
@@ -89,6 +82,13 @@ public class GIU_REGISTRO extends javax.swing.JFrame {
             }
         });
 
+        btnRegistrar.setText("Atras");
+        btnRegistrar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRegistrarActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -96,6 +96,9 @@ public class GIU_REGISTRO extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(34, 34, 34)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(comboRol, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(309, Short.MAX_VALUE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel1)
@@ -105,16 +108,16 @@ public class GIU_REGISTRO extends javax.swing.JFrame {
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(txtNombre)
                             .addComponent(txtContraseña)
-                            .addComponent(txtCI, javax.swing.GroupLayout.PREFERRED_SIZE, 173, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(comboRol, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(156, 156, 156))
-                            .addComponent(btnRegistrar))
-                        .addGap(48, 48, 48)
-                        .addComponent(btnLogin)))
+                            .addComponent(txtCI, javax.swing.GroupLayout.PREFERRED_SIZE, 173, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addContainerGap(106, Short.MAX_VALUE))))
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(16, 16, 16)
+                .addComponent(btnRegistrar)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btnAtras, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(135, 135, 135))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -133,11 +136,11 @@ public class GIU_REGISTRO extends javax.swing.JFrame {
                     .addComponent(jLabel3))
                 .addGap(26, 26, 26)
                 .addComponent(comboRol, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 39, Short.MAX_VALUE)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnRegistrar)
-                    .addComponent(btnLogin))
-                .addGap(67, 67, 67))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 49, Short.MAX_VALUE)
+                .addComponent(btnAtras)
+                .addGap(15, 15, 15)
+                .addComponent(btnRegistrar)
+                .addGap(19, 19, 19))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -161,7 +164,7 @@ public class GIU_REGISTRO extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_txtNombreActionPerformed
 
-    private void btnRegistrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegistrarActionPerformed
+    private void btnAtrasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAtrasActionPerformed
         nombreLog = txtNombre.getText();
         String contraseña = txtContraseña.getText();
         String CI = txtCI.getText();
@@ -180,6 +183,9 @@ public class GIU_REGISTRO extends javax.swing.JFrame {
                 txtNombre.setText("");
                 txtContraseña.setText("");
                 txtCI.setText("");
+                ventanaInicial.setVisible(true);
+                dispose();
+                
             
         } catch (Exception ex) {
             System.getLogger(GIU_REGISTRO.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
@@ -189,7 +195,7 @@ public class GIU_REGISTRO extends javax.swing.JFrame {
             
             
             
-    }//GEN-LAST:event_btnRegistrarActionPerformed
+    }//GEN-LAST:event_btnAtrasActionPerformed
 
     private void comboRolActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_comboRolActionPerformed
         // TODO add your handling code here:
@@ -199,17 +205,11 @@ public class GIU_REGISTRO extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_comboRolItemStateChanged
 
-    private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
-        GIU_LOGIN ventana = new GIU_LOGIN();
-        ventana.setVisible(true);
-        ventana.setSize(400, 300); 
+    private void btnRegistrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegistrarActionPerformed
         
-       
+        ventanaInicial.setVisible(true);
         dispose();
-        
-        
-        
-    }//GEN-LAST:event_btnLoginActionPerformed
+    }//GEN-LAST:event_btnRegistrarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -228,7 +228,7 @@ public class GIU_REGISTRO extends javax.swing.JFrame {
 }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnLogin;
+    private javax.swing.JButton btnAtras;
     private javax.swing.JButton btnRegistrar;
     private javax.swing.JComboBox<String> comboRol;
     private javax.swing.JLabel jLabel1;

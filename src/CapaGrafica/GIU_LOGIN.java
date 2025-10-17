@@ -55,6 +55,11 @@ public class GIU_LOGIN extends javax.swing.JFrame {
         });
 
         btnAtras.setText("Atras");
+        btnAtras.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAtrasActionPerformed(evt);
+            }
+        });
 
         jLabel1.setBackground(new java.awt.Color(0, 0, 0));
         jLabel1.setForeground(new java.awt.Color(0, 0, 0));
@@ -80,7 +85,7 @@ public class GIU_LOGIN extends javax.swing.JFrame {
                             .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addComponent(txtCILOGIN, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)))))
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addContainerGap(163, Short.MAX_VALUE))
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGap(127, 127, 127)
                 .addComponent(btnLogin)
@@ -145,30 +150,36 @@ public class GIU_LOGIN extends javax.swing.JFrame {
                 GIU_Docente ventanaDocente = new GIU_Docente();
         
          try {
-           
-            boolean resultado = registroDB.iniciar(ci, contraseña, rol); 
+           String credenciales = registroDB.iniciar(ci, contraseña);
+           String[] datosUsuarios = credenciales.split("\\|");
+           String rolObtenido = datosUsuarios[0];
+           String nombreUsuarioVentana = datosUsuarios[1];
+        
+        if (rolObtenido != null) {
+            
+            
+            
+            JOptionPane.showMessageDialog(null, "¡Bienvenido, "+ nombreUsuarioVentana); 
 
-            if (resultado == true) {
+            
+            
+             if (rolObtenido.equals("Alumno")) { 
                 
-                 if ("Alumno".equals(registroVentana.rolLog)) {
-                    ventanaEstudiante.setVisible(true);
-                } else{  
-                    ventanaDocente.setVisible(true);
-                }
-                this.dispose(); 
+                ventanaEstudiante.setSize(800, 600); 
+                ventanaEstudiante.setLocationRelativeTo(null); 
+                ventanaEstudiante.setVisible(true);
                 
+            } else if (rolObtenido.equals("Docente")){ 
                 
-                JOptionPane.showMessageDialog(null, "¡Bienvenido," + nombreVentana);
-                
-                
-                
-
-                
-               
-                
+                ventanaDocente.setSize(800, 600); 
+                ventanaDocente.setLocationRelativeTo(null); 
+                ventanaDocente.setVisible(true);
+            }
+            
+            this.dispose();            
                 
                 
-               
+                JOptionPane.showMessageDialog(null, " ¡Bienvenido! " );
 
             } else {
                 
@@ -180,6 +191,12 @@ public class GIU_LOGIN extends javax.swing.JFrame {
         }
 
     }//GEN-LAST:event_btnLoginActionPerformed
+
+    private void btnAtrasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAtrasActionPerformed
+        PantallaInicial ventanaInicial = new PantallaInicial();
+        ventanaInicial.setVisible(true);
+        dispose();
+    }//GEN-LAST:event_btnAtrasActionPerformed
 
     /**
      * @param args the command line arguments
