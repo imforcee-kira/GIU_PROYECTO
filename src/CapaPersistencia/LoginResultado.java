@@ -2,21 +2,24 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
-package CapaLogica;
+package CapaPersistencia;
 
 /**
  *
- * @author eze
+ * @author ezequ
  */
-public class Alumno extends Personas{
+public class LoginResultado {
+    private String nombreUsuario;
     private String rol;
-
+    
+  
+    
+    // Getters
+    public String getNombreUsuario() {
+        return nombreUsuario;
+    }
+    
     public String getRol() {
         return rol;
     }
-
-    public void setRol(String rol) {
-        this.rol = rol;
-    }
-    
 }

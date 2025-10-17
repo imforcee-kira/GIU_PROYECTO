@@ -16,6 +16,8 @@ import java.awt.event.ActionListener;
 
 public class GIU_REGISTRO extends javax.swing.JFrame {
     
+    String rolLog;
+    String nombreLog;
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(GIU_REGISTRO.class.getName());
 
     /**
@@ -160,24 +162,25 @@ public class GIU_REGISTRO extends javax.swing.JFrame {
     }//GEN-LAST:event_txtNombreActionPerformed
 
     private void btnRegistrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegistrarActionPerformed
-        String nombre = txtNombre.getText();
+        nombreLog = txtNombre.getText();
         String contraseña = txtContraseña.getText();
         String CI = txtCI.getText();
-        String rol = (String) comboRol.getSelectedItem(); 
+        rolLog = (String) comboRol.getSelectedItem(); 
         
-        if(nombre.isEmpty() || contraseña.isEmpty() || CI.isEmpty()){
+        if(nombreLog.isEmpty() || contraseña.isEmpty() || CI.isEmpty()){
             JOptionPane.showMessageDialog(null, "Todos los campos son obligatorios");
             return;
         }
         
         Registro registroDB = new Registro();
         try {
-            if(registroDB.registroUsuario(nombre,contraseña, CI, rol)){
+            
+            registroDB.registroUsuario(nombreLog,contraseña, CI,rolLog);
                 JOptionPane.showMessageDialog(null, "Registro Exitoso");
                 txtNombre.setText("");
                 txtContraseña.setText("");
                 txtCI.setText("");
-            }
+            
         } catch (Exception ex) {
             System.getLogger(GIU_REGISTRO.class.getName()).log(System.Logger.Level.ERROR, (String) null, ex);
         }
@@ -212,26 +215,17 @@ public class GIU_REGISTRO extends javax.swing.JFrame {
      * @param args the command line arguments
      */
     public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ReflectiveOperationException | javax.swing.UnsupportedLookAndFeelException ex) {
-            logger.log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
+    /* Set the Nimbus look and feel */
+    // ... (Deja el código de Look and Feel que genera el IDE)
 
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(() -> new GIU_REGISTRO().setVisible(true));
-    }
+    /* Create and display the form */
+    java.awt.EventQueue.invokeLater(new Runnable() {
+        public void run() {
+            // Inicia la aplicación en la ventana de REGISTRO
+            new GIU_REGISTRO().setVisible(true); 
+        }
+    });
+}
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnLogin;
@@ -245,4 +239,8 @@ public class GIU_REGISTRO extends javax.swing.JFrame {
     private javax.swing.JTextField txtContraseña;
     private javax.swing.JTextField txtNombre;
     // End of variables declaration//GEN-END:variables
+
+    String nombreLog() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
 }
