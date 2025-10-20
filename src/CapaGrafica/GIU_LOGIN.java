@@ -147,7 +147,7 @@ public class GIU_LOGIN extends javax.swing.JFrame {
         Registro registroDB = new Registro();
         String rolVerificar = registroVentana.rolLog;
                 GIU_Estudiante ventanaEstudiante = new GIU_Estudiante();
-                GIU_Docente ventanaDocente = new GIU_Docente();
+                GIU_Docente ventanaDocente = new GIU_Docente(ci);
         
          try {
            String credenciales = registroDB.iniciar(ci, contraseña);

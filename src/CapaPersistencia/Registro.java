@@ -14,6 +14,7 @@ public class Registro {
    
     private static final String SQL_REGISTRO = ("INSERT INTO usuarios (nombreUsuario,contraseña,ci,rol) VALUES (?,?,?,?)");
     private static final String SQL_LOGIN = ("SELECT  * FROM usuarios WHERE ci = ? AND contraseña = ?");
+    private static final String SQL_REGISTRAR_FALTA = ("INSERT INTO faltas (desde, hasta, motivo,ciDocente) VALUES (?, ?, ?, ?)");
 
     public Conexion cone = new Conexion();
     public PreparedStatement ps;
@@ -83,5 +84,38 @@ public class Registro {
         }
         
     return resultadoString;
-    } 
-}
+    }
+    public void RegistrarFalta(String desde, String hasta, String motivo, String ciDocente) throws Exception {
+        
+        
+        try { 
+            Connection con = cone.getConnection();
+            ps = con.prepareStatement(SQL_REGISTRAR_FALTA);
+        
+            
+            ps.setString(1, desde);
+            ps.setString(2, hasta);
+            ps.setString(3, motivo);
+            ps.setString(4, ciDocente);
+        
+            int resultado = ps.executeUpdate();
+            
+            if (resultado <= 0){
+                throw new Exception("No se pudo registrar (La base de datos no afectó filas)");
+            }    
+            }catch (SQLException e) {
+
+            System.err.println("ERROR SQL DETALLADO al registrar: " + e.getMessage());
+
+            throw new Exception("Error al registrar");
+
+        }
+        
+        
+        }
+    
+    
+    }
+    
+    
+ 

@@ -12,9 +12,9 @@ import java.sql.PreparedStatement;
 public class Conexion {
 
     
-    private static final String URL = "jdbc:mysql://localhost:3306/project?useSSL=false&serverTimezone=UTC";
+    private static final String URL = "jdbc:mysql://localhost:3307/project?useSSL=false&serverTimezone=UTC";
     private static final String USUARIO = "root";
-    private static final String CLAVE = ""; // Clave vacía por defecto de XAMPP
+    private static final String CLAVE = ""; 
 
     public static Connection getConnection() throws Exception {
         Connection con = null;
