@@ -8,6 +8,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 public class Registro {
 
@@ -15,6 +16,7 @@ public class Registro {
     private static final String SQL_REGISTRO = ("INSERT INTO usuarios (nombreUsuario,contraseña,ci,rol) VALUES (?,?,?,?)");
     private static final String SQL_LOGIN = ("SELECT  * FROM usuarios WHERE ci = ? AND contraseña = ?");
     private static final String SQL_REGISTRAR_FALTA = ("INSERT INTO faltas (desde, hasta, motivo,ciDocente) VALUES (?, ?, ?, ?)");
+    private static final String SQL_BUSCAR_DOCENTE = ("SELECT ci FROM usuarios WHERE rol = 'Docente'");
 
     public Conexion cone = new Conexion();
     public PreparedStatement ps;
@@ -88,6 +90,7 @@ public class Registro {
     public void RegistrarFalta(String desde, String hasta, String motivo, String ciDocente) throws Exception {
         
         
+        
         try { 
             Connection con = cone.getConnection();
             ps = con.prepareStatement(SQL_REGISTRAR_FALTA);
@@ -113,9 +116,33 @@ public class Registro {
         
         
         }
+        public ArrayList<String> buscarCIDOCENTE() throws Exception{
+            ArrayList<String> listaCI = new ArrayList();
+            
+            try{
+                Connection con = cone.getConnection();
+                PreparedStatement ps = con.prepareStatement(SQL_BUSCAR_DOCENTE);
+                ResultSet rs = ps.executeQuery();
+                
+                while(rs.next()){
+                    listaCI.add(rs.getString("ci"));
+                }
+                
+                } catch (SQLException e) {
+                    System.err.println("ERROR SQL DETALLADO al obtener CIs: " + e.getMessage());
+                    throw new Exception("Error al cargar la lista de docentes: " + e.getMessage());
+                    }
+    
+                    return listaCI; // Devuelve la lista de CIs de docentes
+}
+                
+                
+            
+            }
+        
     
     
-    }
+    
     
     
  

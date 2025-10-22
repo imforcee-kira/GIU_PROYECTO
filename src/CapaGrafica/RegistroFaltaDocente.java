@@ -7,6 +7,7 @@ package CapaGrafica;
 import CapaPersistencia.Registro;
 import com.toedter.calendar.demo.DateChooserPanel;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import javax.swing.JOptionPane;
 
@@ -17,18 +18,62 @@ import javax.swing.JOptionPane;
 public class RegistroFaltaDocente extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(RegistroFaltaDocente.class.getName());
-    private String ciDocentelogueado;
+    private final String ciDocentelogueado;
+    private final String rolUsuariologueado;
+    
+    private void cargarComboBoxDocentes() {
+    Registro registroDB = new Registro();
+    try {
+        ArrayList<String> cisDocentes = registroDB.buscarCIDOCENTE();
+        
+        // Limpiamos el combo box por si acaso
+        comboCIDocente.removeAllItems();
+        
+        if (cisDocentes.isEmpty()) {
+            comboCIDocente.addItem("No hay docentes registrados");
+            // Deshabilitar el botón de guardar o mostrar error
+        } else {
+            // Añadimos cada CI al JComboBox
+            for (String ci : cisDocentes) {
+                comboCIDocente.addItem(ci);
+            }
+        }
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(this, "Error al cargar docentes: " + e.getMessage(), "Error de DB", JOptionPane.ERROR_MESSAGE);
+    }
+}
+    
+    private void configurarVistaPorRol() {
+        if ("Docente".equals(this.rolUsuariologueado)) {
+        
+        labelCIDOCENTE.setVisible(false); 
+        comboCIDocente.setVisible(false); 
+
+        } else if ("Admin".equals(this.rolUsuariologueado)) {
+        // Administrador: Mostramos el selector y lo llenamos.
+        labelCIDOCENTE.setText("Seleccionar C.I. Ausente:");
+        labelCIDOCENTE.setVisible(true);
+        comboCIDocente.setVisible(true);
+
+        
+        cargarComboBoxDocentes();
+        }
+      }
     /**
      * Creates new form RegistroFaltaDocente
      */
-    public RegistroFaltaDocente(String ci) {
-        initComponents();
+    public RegistroFaltaDocente(String ci, String rol) {
+        
+        
         this.ciDocentelogueado = ci;
+        this.rolUsuariologueado = rol;
+        
+        initComponents();
+        configurarVistaPorRol();
+        
     }
 
-    private RegistroFaltaDocente() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
+   
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -47,6 +92,8 @@ public class RegistroFaltaDocente extends javax.swing.JFrame {
         hastaChooser = new com.toedter.calendar.JDateChooser();
         comboMotivo = new javax.swing.JComboBox<>();
         jLabel3 = new javax.swing.JLabel();
+        comboCIDocente = new javax.swing.JComboBox<>();
+        labelCIDOCENTE = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -73,6 +120,10 @@ public class RegistroFaltaDocente extends javax.swing.JFrame {
         jLabel3.setForeground(new java.awt.Color(0, 0, 0));
         jLabel3.setText("Motivo");
 
+        labelCIDOCENTE.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        labelCIDOCENTE.setForeground(new java.awt.Color(0, 0, 0));
+        labelCIDOCENTE.setText("CI Docente");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -85,28 +136,49 @@ public class RegistroFaltaDocente extends javax.swing.JFrame {
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(30, 30, 30)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(desdeChooser, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel1)
-                            .addComponent(jLabel2)
-                            .addComponent(hastaChooser, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(comboMotivo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel3))))
-                .addContainerGap(173, Short.MAX_VALUE))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel2)
+                                    .addComponent(hastaChooser, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(comboMotivo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel3))
+                                .addGap(0, 0, Short.MAX_VALUE))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel1)
+                                    .addComponent(desdeChooser, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(comboCIDocente, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(0, 0, Short.MAX_VALUE))
+                                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addGap(79, 79, 79)
+                                        .addComponent(labelCIDOCENTE)
+                                        .addGap(0, 54, Short.MAX_VALUE)))))))
+                .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addGap(30, 30, 30)
-                .addComponent(jLabel1)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(desdeChooser, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(30, 30, 30)
+                        .addComponent(jLabel1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(desdeChooser, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(labelCIDOCENTE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(comboCIDocente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jLabel2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(hastaChooser, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jLabel3)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 12, Short.MAX_VALUE)
                 .addComponent(comboMotivo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(26, 26, 26)
                 .addComponent(btnRegistrar)
@@ -117,7 +189,7 @@ public class RegistroFaltaDocente extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -144,6 +216,21 @@ public class RegistroFaltaDocente extends javax.swing.JFrame {
         SimpleDateFormat formato = new SimpleDateFormat("yyyy-MM-dd");
         String formatoHasta = formato.format(hasta);
         String formatoDesde = formato.format(desde);
+        
+            
+    if (this.rolUsuariologueado.equals("Admin")) {
+        // ADMIN: Toma la CI del ComboBox seleccionado
+        ciDocente = (String) comboCIDocente.getSelectedItem();
+        
+        if (ciDocente == null || ciDocente.equals("No hay docentes registrados")) {
+            JOptionPane.showMessageDialog(this, "Seleccione una C.I. de docente válida.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        
+    } else {
+        
+        ciDocente = this.ciDocentelogueado; 
+    }
   
         Registro registroDB = new Registro();
         
@@ -165,30 +252,10 @@ public class RegistroFaltaDocente extends javax.swing.JFrame {
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ReflectiveOperationException | javax.swing.UnsupportedLookAndFeelException ex) {
-            logger.log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(() -> new RegistroFaltaDocente().setVisible(true));
-    }
-
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnRegistrar;
+    private javax.swing.JComboBox<String> comboCIDocente;
     private javax.swing.JComboBox<String> comboMotivo;
     private com.toedter.calendar.JDateChooser desdeChooser;
     private com.toedter.calendar.JDateChooser hastaChooser;
@@ -196,5 +263,6 @@ public class RegistroFaltaDocente extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JLabel labelCIDOCENTE;
     // End of variables declaration//GEN-END:variables
 }

@@ -97,9 +97,9 @@ public class GIU_Docente extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnRegistrarFalta1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegistrarFalta1ActionPerformed
-        String cidelDocente = this.ciDocente;
-        RegistroFaltaDocente ventanaRegistro = new RegistroFaltaDocente(cidelDocente);
-        ventanaRegistro.setVisible(true);
+//        String cidelDocente = this.ciDocente;
+//        RegistroFaltaDocente ventanaRegistro = new RegistroFaltaDocente(cidelDocente);
+//        ventanaRegistro.setVisible(true);
     }//GEN-LAST:event_btnRegistrarFalta1ActionPerformed
 
     /**

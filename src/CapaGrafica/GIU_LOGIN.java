@@ -148,6 +148,7 @@ public class GIU_LOGIN extends javax.swing.JFrame {
         String rolVerificar = registroVentana.rolLog;
                 GIU_Estudiante ventanaEstudiante = new GIU_Estudiante();
                 GIU_Docente ventanaDocente = new GIU_Docente(ci);
+                GIU_Admin ventanaAdmin = new GIU_Admin(ci, rol);
         
          try {
            String credenciales = registroDB.iniciar(ci, contraseña);
@@ -174,7 +175,12 @@ public class GIU_LOGIN extends javax.swing.JFrame {
                 ventanaDocente.setSize(800, 600); 
                 ventanaDocente.setLocationRelativeTo(null); 
                 ventanaDocente.setVisible(true);
+            } else if (rolObtenido.equals("Admin")){
+                ventanaAdmin.setLocationRelativeTo(null);
+                ventanaAdmin.setVisible(true);
+                
             }
+             
             
             this.dispose();            
                 
