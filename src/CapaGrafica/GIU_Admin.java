@@ -11,8 +11,8 @@ import CapaGrafica.RegistroFaltaDocente;
  */
 public class GIU_Admin extends javax.swing.JFrame {
 
-    private  String ciAdminLogueado;
-    private  String rolAdminLogueado;
+    private  String ciAdminLogueado = "";
+    private  String rolAdminLogueado = "";
     /**
      * Creates new form GIU_Admin
      */
@@ -38,8 +38,7 @@ public class GIU_Admin extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         btnVentanaRegistrar = new javax.swing.JButton();
-        btnAgregarClase = new javax.swing.JButton();
-        btnAgregarAlumno = new javax.swing.JButton();
+        btnVentanaAgregarAlumno = new javax.swing.JButton();
         btnAgregarDocente = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -57,17 +56,10 @@ public class GIU_Admin extends javax.swing.JFrame {
             }
         });
 
-        btnAgregarClase.setText("Registrar Clase");
-        btnAgregarClase.addActionListener(new java.awt.event.ActionListener() {
+        btnVentanaAgregarAlumno.setText("Agregar Alumno");
+        btnVentanaAgregarAlumno.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnAgregarClaseActionPerformed(evt);
-            }
-        });
-
-        btnAgregarAlumno.setText("Agregar Alumno");
-        btnAgregarAlumno.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnAgregarAlumnoActionPerformed(evt);
+                btnVentanaAgregarAlumnoActionPerformed(evt);
             }
         });
 
@@ -88,8 +80,7 @@ public class GIU_Admin extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 175, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(btnAgregarDocente)
-                    .addComponent(btnAgregarAlumno)
-                    .addComponent(btnAgregarClase)
+                    .addComponent(btnVentanaAgregarAlumno)
                     .addComponent(btnVentanaRegistrar))
                 .addGap(32, 32, 32))
         );
@@ -100,13 +91,11 @@ public class GIU_Admin extends javax.swing.JFrame {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
                     .addComponent(btnVentanaRegistrar))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(btnAgregarClase)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(btnAgregarAlumno)
+                .addGap(18, 18, 18)
+                .addComponent(btnVentanaAgregarAlumno)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btnAgregarDocente)
-                .addContainerGap(146, Short.MAX_VALUE))
+                .addContainerGap(175, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -133,13 +122,9 @@ public class GIU_Admin extends javax.swing.JFrame {
     ventanaFaltas.setVisible(true);
     }//GEN-LAST:event_btnVentanaRegistrarActionPerformed
 
-    private void btnAgregarClaseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarClaseActionPerformed
+    private void btnVentanaAgregarAlumnoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVentanaAgregarAlumnoActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_btnAgregarClaseActionPerformed
-
-    private void btnAgregarAlumnoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarAlumnoActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnAgregarAlumnoActionPerformed
+    }//GEN-LAST:event_btnVentanaAgregarAlumnoActionPerformed
 
     private void btnAgregarDocenteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarDocenteActionPerformed
         // TODO add your handling code here:
@@ -148,9 +133,8 @@ public class GIU_Admin extends javax.swing.JFrame {
     
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnAgregarAlumno;
-    private javax.swing.JButton btnAgregarClase;
     private javax.swing.JButton btnAgregarDocente;
+    private javax.swing.JButton btnVentanaAgregarAlumno;
     private javax.swing.JButton btnVentanaRegistrar;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;

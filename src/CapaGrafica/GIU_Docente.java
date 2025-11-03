@@ -14,17 +14,18 @@ import javax.swing.JButton;
 
 public class GIU_Docente extends javax.swing.JFrame {
     private String ciDocente;
+    private String RolUsuario;
     /**
      * Creates new form GIU_Docente
      */
-    public GIU_Docente(String ci) {
+    public GIU_Docente(String ci, String rol) {
         this.ciDocente = ci;
+        this.RolUsuario = rol;
         initComponents();
+        
     }
 
-    private GIU_Docente() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -97,47 +98,16 @@ public class GIU_Docente extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnRegistrarFalta1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegistrarFalta1ActionPerformed
-//        String cidelDocente = this.ciDocente;
-//        RegistroFaltaDocente ventanaRegistro = new RegistroFaltaDocente(cidelDocente);
-//        ventanaRegistro.setVisible(true);
+        String cidelDocente = this.ciDocente;
+        String roldelDocente = this.RolUsuario;
+        RegistroFaltaDocente ventanaRegistro = new RegistroFaltaDocente(cidelDocente,roldelDocente);
+        ventanaRegistro.setVisible(true);
     }//GEN-LAST:event_btnRegistrarFalta1ActionPerformed
 
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(GIU_Docente.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(GIU_Docente.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(GIU_Docente.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(GIU_Docente.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-
-                new GIU_Docente().setVisible(true);
-            }
-        });
-    }
-
+   
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnRegistrarFalta1;
     private javax.swing.JLabel jLabel1;

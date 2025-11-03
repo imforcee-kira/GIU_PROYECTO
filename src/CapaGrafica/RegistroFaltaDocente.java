@@ -20,20 +20,22 @@ public class RegistroFaltaDocente extends javax.swing.JFrame {
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(RegistroFaltaDocente.class.getName());
     private final String ciDocentelogueado;
     private final String rolUsuariologueado;
+
+    
     
     private void cargarComboBoxDocentes() {
     Registro registroDB = new Registro();
     try {
         ArrayList<String> cisDocentes = registroDB.buscarCIDOCENTE();
         
-        // Limpiamos el combo box por si acaso
+        
         comboCIDocente.removeAllItems();
         
         if (cisDocentes.isEmpty()) {
             comboCIDocente.addItem("No hay docentes registrados");
-            // Deshabilitar el botón de guardar o mostrar error
+           
         } else {
-            // Añadimos cada CI al JComboBox
+            
             for (String ci : cisDocentes) {
                 comboCIDocente.addItem(ci);
             }
@@ -44,13 +46,21 @@ public class RegistroFaltaDocente extends javax.swing.JFrame {
 }
     
     private void configurarVistaPorRol() {
-        if ("Docente".equals(this.rolUsuariologueado)) {
+        String rolNormalizado;
+        if (this.rolUsuariologueado == null) {
+        rolNormalizado = ""; // Si es null, lo tratamos como cadena vacía para evitar el error.
+            } else {
+        // 2. Limpieza de espacios y conversión a minúsculas para comparación segura
+        rolNormalizado = this.rolUsuariologueado.trim().toLowerCase(); 
+            }
+        
+        if ("Docente".equals(rolNormalizado)) {
         
         labelCIDOCENTE.setVisible(false); 
         comboCIDocente.setVisible(false); 
 
-        } else if ("Admin".equals(this.rolUsuariologueado)) {
-        // Administrador: Mostramos el selector y lo llenamos.
+        } else if ("Admin".equals(rolNormalizado)) {
+        
         labelCIDOCENTE.setText("Seleccionar C.I. Ausente:");
         labelCIDOCENTE.setVisible(true);
         comboCIDocente.setVisible(true);
@@ -218,8 +228,8 @@ public class RegistroFaltaDocente extends javax.swing.JFrame {
         String formatoDesde = formato.format(desde);
         
             
-    if (this.rolUsuariologueado.equals("Admin")) {
-        // ADMIN: Toma la CI del ComboBox seleccionado
+    if ("Admin".equals(this.rolUsuariologueado)) {
+        
         ciDocente = (String) comboCIDocente.getSelectedItem();
         
         if (ciDocente == null || ciDocente.equals("No hay docentes registrados")) {
@@ -229,7 +239,7 @@ public class RegistroFaltaDocente extends javax.swing.JFrame {
         
     } else {
         
-        ciDocente = this.ciDocentelogueado; 
+        
     }
   
         Registro registroDB = new Registro();
