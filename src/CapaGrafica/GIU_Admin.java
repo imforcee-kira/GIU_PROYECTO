@@ -127,7 +127,9 @@ public class GIU_Admin extends javax.swing.JFrame {
     }//GEN-LAST:event_btnVentanaAgregarAlumnoActionPerformed
 
     private void btnAgregarDocenteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarDocenteActionPerformed
-        // TODO add your handling code here:
+        AgregarDocente ventanaAgregardocente = new AgregarDocente();
+        ventanaAgregardocente.setVisible(true);
+        dispose();
     }//GEN-LAST:event_btnAgregarDocenteActionPerformed
 
     

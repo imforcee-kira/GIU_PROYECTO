@@ -23,52 +23,43 @@ public class RegistroFaltaDocente extends javax.swing.JFrame {
 
     
     
-    private void cargarComboBoxDocentes() {
-    Registro registroDB = new Registro();
-    try {
-        ArrayList<String> cisDocentes = registroDB.buscarCIDOCENTE();
-        
-        
-        comboCIDocente.removeAllItems();
-        
-        if (cisDocentes.isEmpty()) {
-            comboCIDocente.addItem("No hay docentes registrados");
-           
-        } else {
-            
-            for (String ci : cisDocentes) {
-                comboCIDocente.addItem(ci);
-            }
-        }
-    } catch (Exception e) {
-        JOptionPane.showMessageDialog(this, "Error al cargar docentes: " + e.getMessage(), "Error de DB", JOptionPane.ERROR_MESSAGE);
-    }
-}
     
-    private void configurarVistaPorRol() {
-        String rolNormalizado;
-        if (this.rolUsuariologueado == null) {
-        rolNormalizado = ""; // Si es null, lo tratamos como cadena vacía para evitar el error.
-            } else {
-        // 2. Limpieza de espacios y conversión a minúsculas para comparación segura
-        rolNormalizado = this.rolUsuariologueado.trim().toLowerCase(); 
-            }
-        
-        if ("Docente".equals(rolNormalizado)) {
-        
-        labelCIDOCENTE.setVisible(false); 
-        comboCIDocente.setVisible(false); 
+    
+//    private void configurarVistaPorRol() {
+//        String rolNormalizado = (this.rolUsuariologueado != null) 
+//                            ? this.rolUsuariologueado.trim().toLowerCase()
+//                            : "";
+//        if (this.rolUsuariologueado == null) {
+//        rolNormalizado = ""; // Si es null, lo tratamos como cadena vacía para evitar el error.
+//            } else {
+//        // 2. Limpieza de espacios y conversión a minúsculas para comparación segura
+//        rolNormalizado = this.rolUsuariologueado.trim().toLowerCase(); 
+//            }
+//        
+//        if ("docente".equals(rolNormalizado)) {
+//        
+//            if (comboCIDocente != null) {
+//            comboCIDocente.setVisible(true);
+//            }
+//            if (labelCIDOCENTE != null) {
+//            labelCIDOCENTE.setVisible(true);
+//            labelCIDOCENTE.setText("C.I. Docente Ausente:");
+//        }
+//
+//        } else if ("admin".equals(rolNormalizado)) {
+//        
+//            labelCIDOCENTE.setText("Seleccionar C.I. Ausente:");
+//            if (comboCIDocente != null) {
+//            comboCIDocente.setVisible(false);
+//            }
+//            if (labelCIDOCENTE != null) {
+//            labelCIDOCENTE.setVisible(false);
+//            }
 
-        } else if ("Admin".equals(rolNormalizado)) {
         
-        labelCIDOCENTE.setText("Seleccionar C.I. Ausente:");
-        labelCIDOCENTE.setVisible(true);
-        comboCIDocente.setVisible(true);
-
         
-        cargarComboBoxDocentes();
-        }
-      }
+//        }
+//      }
     /**
      * Creates new form RegistroFaltaDocente
      */
@@ -79,7 +70,17 @@ public class RegistroFaltaDocente extends javax.swing.JFrame {
         this.rolUsuariologueado = rol;
         
         initComponents();
-        configurarVistaPorRol();
+        
+        boolean isAdmin = "Admin".equalsIgnoreCase(rol);
+    
+    // Hacemos el campo de la C.I. ausente visible/invisible
+    if (txtDocenteAusente != null) {
+        txtDocenteAusente.setVisible(isAdmin);
+    }
+    // Asumiendo que existe una etiqueta para ese campo:
+    if (labelCIDOCENTE != null) { // Reemplazando el antiguo labelCIDOCENTE
+        labelCIDOCENTE.setVisible(isAdmin);
+    }
         
     }
 
@@ -102,8 +103,10 @@ public class RegistroFaltaDocente extends javax.swing.JFrame {
         hastaChooser = new com.toedter.calendar.JDateChooser();
         comboMotivo = new javax.swing.JComboBox<>();
         jLabel3 = new javax.swing.JLabel();
-        comboCIDocente = new javax.swing.JComboBox<>();
         labelCIDOCENTE = new javax.swing.JLabel();
+        labelCIDOCENTE1 = new javax.swing.JLabel();
+        comboCLASEDOCENTE = new javax.swing.JComboBox<>();
+        txtDocenteAusente = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -134,6 +137,18 @@ public class RegistroFaltaDocente extends javax.swing.JFrame {
         labelCIDOCENTE.setForeground(new java.awt.Color(0, 0, 0));
         labelCIDOCENTE.setText("CI Docente");
 
+        labelCIDOCENTE1.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        labelCIDOCENTE1.setForeground(new java.awt.Color(0, 0, 0));
+        labelCIDOCENTE1.setText("Clase Docente");
+
+        comboCLASEDOCENTE.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "2MA", "2MB", "2MC", " " }));
+
+        txtDocenteAusente.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtDocenteAusenteActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -159,33 +174,43 @@ public class RegistroFaltaDocente extends javax.swing.JFrame {
                                     .addComponent(desdeChooser, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(jPanel1Layout.createSequentialGroup()
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(comboCIDocente, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(0, 0, Short.MAX_VALUE))
-                                    .addGroup(jPanel1Layout.createSequentialGroup()
                                         .addGap(79, 79, 79)
                                         .addComponent(labelCIDOCENTE)
-                                        .addGap(0, 54, Short.MAX_VALUE)))))))
+                                        .addGap(0, 54, Short.MAX_VALUE))
+                                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(comboCLASEDOCENTE, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(labelCIDOCENTE1, javax.swing.GroupLayout.Alignment.TRAILING)
+                                            .addComponent(txtDocenteAusente, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addGap(0, 0, Short.MAX_VALUE)))))))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(30, 30, 30)
-                        .addComponent(jLabel1)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                                .addContainerGap()
+                                .addComponent(labelCIDOCENTE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(txtDocenteAusente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(30, 30, 30)
+                                .addComponent(jLabel1)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(desdeChooser, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)))
+                        .addComponent(jLabel2)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(desdeChooser, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(labelCIDOCENTE)
+                        .addComponent(hastaChooser, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(labelCIDOCENTE1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(comboCIDocente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jLabel2)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(hastaChooser, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(comboCLASEDOCENTE, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jLabel3)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 12, Short.MAX_VALUE)
@@ -215,6 +240,51 @@ public class RegistroFaltaDocente extends javax.swing.JFrame {
         motivo = (String) comboMotivo.getSelectedItem();
         Date desde = desdeChooser.getDate();
         Date hasta = hastaChooser.getDate();
+        String idClaseSeleccionada = (String) comboCLASEDOCENTE.getSelectedItem();
+        String ciDocenteAusente;
+        
+        Registro registroDB = new Registro();
+        try {
+        if ("Admin".equalsIgnoreCase(this.rolUsuariologueado)) {
+            
+            ciDocenteAusente = txtDocenteAusente.getText().trim();
+            
+            if (ciDocenteAusente.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "El Administrador debe ingresar la C.I. del docente ausente.", "Error de Validación", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            // --- REQUISITO 1: VERIFICAR QUE LA C.I. SEA UN DOCENTE REGISTRADO ---
+            if (!registroDB.verificarDocentePorCI(ciDocenteAusente)) {
+                JOptionPane.showMessageDialog(this, 
+                    "La C.I. ingresada (" + ciDocenteAusente + ") no corresponde a un docente registrado.", 
+                    "Validación Fallida", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            // --- REQUISITO 2: VERIFICAR LA ASIGNACIÓN DOCENTE-CLASE ---
+            if (!registroDB.verificarAsignacionDocenteClase(ciDocenteAusente, idClaseSeleccionada)) {
+                JOptionPane.showMessageDialog(this, 
+                    "El docente " + ciDocenteAusente + " NO está asignado al grupo/clase " + idClaseSeleccionada + ".", 
+                    "Validación Fallida", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            
+        } else { // Rol Docente
+            // El docente solo registra para sí mismo
+            ciDocenteAusente = this.ciDocentelogueado; 
+            // Si quieres que el docente también verifique su asignación:
+            /*
+            if (!registroDB.verificarAsignacionDocenteClase(ciDocenteAusente, idClaseSeleccionada)) {
+                JOptionPane.showMessageDialog(this, "Usted no está asignado a esta clase.", "Validación Fallida", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            */
+        }
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(this, "Error de base de datos durante la validación: " + e.getMessage(), "Error DB", JOptionPane.ERROR_MESSAGE);
+        return;
+    }
         
         if( desde == null || hasta == null){
             JOptionPane.showMessageDialog(null, "Debe seleccionar una fecha de inicio y fin obligatoriomanete");
@@ -228,24 +298,25 @@ public class RegistroFaltaDocente extends javax.swing.JFrame {
         String formatoDesde = formato.format(desde);
         
             
-    if ("Admin".equals(this.rolUsuariologueado)) {
+//    if ("Admin".equals(this.rolUsuariologueado)) {
+//        
+//        ciDocente = (String) comboCIDocente.getSelectedItem();
+//        
+//        if (ciDocente == null || ciDocente.equals("No hay docentes registrados")) {
+//            JOptionPane.showMessageDialog(this, "Seleccione una C.I. de docente válida.", "Error", JOptionPane.ERROR_MESSAGE);
+//            return;
+//        }
+//        
+//    } else {
         
-        ciDocente = (String) comboCIDocente.getSelectedItem();
         
-        if (ciDocente == null || ciDocente.equals("No hay docentes registrados")) {
-            JOptionPane.showMessageDialog(this, "Seleccione una C.I. de docente válida.", "Error", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-        
-    } else {
-        
-        
-    }
+//    }
   
-        Registro registroDB = new Registro();
+        
+        
         
         try{
-            registroDB.RegistrarFalta(formatoDesde, formatoHasta, motivo, ciDocente);
+            registroDB.RegistrarFalta(formatoDesde, formatoHasta, motivo, ciDocente, idClaseSeleccionada);
             JOptionPane.showMessageDialog(null, "Falta regristrada por motivo: " + motivo, "registro Exitoso", JOptionPane.INFORMATION_MESSAGE);
             
             desdeChooser.setDate(null);
@@ -259,13 +330,17 @@ public class RegistroFaltaDocente extends javax.swing.JFrame {
         
     }//GEN-LAST:event_btnRegistrarActionPerformed
 
+    private void txtDocenteAusenteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtDocenteAusenteActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtDocenteAusenteActionPerformed
+
     /**
      * @param args the command line arguments
      */
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnRegistrar;
-    private javax.swing.JComboBox<String> comboCIDocente;
+    private javax.swing.JComboBox<String> comboCLASEDOCENTE;
     private javax.swing.JComboBox<String> comboMotivo;
     private com.toedter.calendar.JDateChooser desdeChooser;
     private com.toedter.calendar.JDateChooser hastaChooser;
@@ -274,5 +349,7 @@ public class RegistroFaltaDocente extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JLabel labelCIDOCENTE;
+    private javax.swing.JLabel labelCIDOCENTE1;
+    private javax.swing.JTextField txtDocenteAusente;
     // End of variables declaration//GEN-END:variables
 }

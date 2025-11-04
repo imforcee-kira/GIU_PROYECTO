@@ -4,6 +4,9 @@
  */
 package CapaGrafica;
 
+import CapaPersistencia.Registro;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author ezequ
@@ -28,8 +31,13 @@ public class AgregarDocente extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jScrollBar1 = new javax.swing.JScrollBar();
         jPanel1 = new javax.swing.JPanel();
         btnAgregarDocente = new javax.swing.JButton();
+        txtCIDOCENTE = new javax.swing.JTextField();
+        jLabel1 = new javax.swing.JLabel();
+        comboCLASE = new javax.swing.JComboBox<>();
+        jLabel2 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -42,28 +50,61 @@ public class AgregarDocente extends javax.swing.JFrame {
             }
         });
 
+        jLabel1.setText("CI Docente");
+
+        comboCLASE.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "2MA", "2MB", "2MC", " " }));
+
+        jLabel2.setText("Clase");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(152, 152, 152)
+                .addGap(175, 175, 175)
                 .addComponent(btnAgregarDocente)
-                .addContainerGap(176, Short.MAX_VALUE))
+                .addContainerGap(141, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addGap(53, 53, 53)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(txtCIDOCENTE, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(19, 19, 19)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(comboCLASE, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(50, 50, 50))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(215, Short.MAX_VALUE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(btnAgregarDocente)
                 .addGap(62, 62, 62))
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(82, 82, 82)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel1)
+                        .addGap(30, 30, 30)
+                        .addComponent(txtCIDOCENTE, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel2)
+                        .addGap(30, 30, 30)
+                        .addComponent(comboCLASE, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(150, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -74,36 +115,63 @@ public class AgregarDocente extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnAgregarDocenteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarDocenteActionPerformed
-        // TODO add your handling code here:
+String ciDocente = txtCIDOCENTE.getText().trim(); // C.I. del campo de texto
+    String idClase = (String) comboCLASE.getSelectedItem(); 
+    
+    Registro registroDB = new Registro();
+    
+    
+    if (ciDocente.isEmpty() || ciDocente.length() < 7) {
+         JOptionPane.showMessageDialog(this, "Debe ingresar una C.I. de docente válida (mínimo 7 dígitos).", "Error de Validación", JOptionPane.ERROR_MESSAGE);
+         return;
+    }
+    if (idClase == null || idClase.equals("Seleccione Clase")) {
+        JOptionPane.showMessageDialog(this, "Seleccione una clase a asignar.", "Error de Validación", JOptionPane.ERROR_MESSAGE);
+        return;
+    }
+    
+    
+    
+    try {
+        if (!registroDB.verificarDocentePorCI(ciDocente)) {
+            JOptionPane.showMessageDialog(this, "La C.I. ingresada no corresponde a un docente registrado.", "Error de Validación", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+    } catch (Exception e) {
+        JOptionPane.showMessageDialog(this, "Error de DB al verificar docente: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        return;
+    }
+
+   
+    try {
+       
+        registroDB.asignarDocenteClase(ciDocente, idClase); 
+        
+        JOptionPane.showMessageDialog(this, "Asignación exitosa: Docente " + ciDocente + " asignado a la clase " + idClase, "Éxito", JOptionPane.INFORMATION_MESSAGE);
+        
+        // Limpiar
+        txtCIDOCENTE.setText("");
+        comboCLASE.setSelectedIndex(0);
+        
+    } catch (Exception e) {
+        // Captura el error de clave duplicada si ya existe la asignación
+        JOptionPane.showMessageDialog(this, "Fallo en la asignación: " + e.getMessage(), "Error de Base de Datos", JOptionPane.ERROR_MESSAGE);
+    }
     }//GEN-LAST:event_btnAgregarDocenteActionPerformed
 
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ReflectiveOperationException | javax.swing.UnsupportedLookAndFeelException ex) {
-            logger.log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(() -> new AgregarDocente().setVisible(true));
-    }
+   
+    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAgregarDocente;
+    private javax.swing.JComboBox<String> comboCLASE;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JScrollBar jScrollBar1;
+    private javax.swing.JTextField txtCIDOCENTE;
     // End of variables declaration//GEN-END:variables
 }

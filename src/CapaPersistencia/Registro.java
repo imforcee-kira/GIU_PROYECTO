@@ -14,15 +14,58 @@ import javax.security.auth.login.Configuration;
 public class Registro {
 
    
-    private static final String SQL_REGISTRO = ("INSERT INTO usuarios (nombreUsuario,contraseña,ci,rol) VALUES (?,?,?,?)");
-    private static final String SQL_LOGIN = ("SELECT  * FROM usuarios WHERE ci = ? AND contraseña = ?");
-    private static final String SQL_REGISTRAR_FALTA = ("INSERT INTO faltas (desde, hasta, motivo,ciDocente) VALUES (?, ?, ?, ?)");
-    private static final String SQL_BUSCAR_DOCENTE = ("SELECT ci FROM usuarios WHERE rol = 'Docente'");
-    private static final String SQL_AGREGAR_DOCENTECLASE = ("INSET INTO docenteclase(ciDocente, idClase) VALUES(?,?)");
+    private static final String SQL_REGISTRO = ("INSERT INTO usuario (ciUsuario,nombre,contraseña,rol) VALUES (?,?,?,?)");
+    private static final String SQL_LOGIN = ("SELECT  * FROM usuario WHERE ciUsuario = ? AND contraseña = ?");
+    private static final String SQL_REGISTRAR_FALTA = ("INSERT INTO faltas (fechaInicio, fechaFin, motivo,ciDocente, idClase) VALUES (?, ?, ?, ?,?)");
+    private static final String SQL_BUSCAR_DOCENTE = ("SELECT ciUsuario FROM usuario WHERE rol = 'Docente'");
+    private static final String SQL_AGREGAR_DOCENTECLASE = ("INSERT INTO docenteclase(ciDocente, idClase) VALUES(?,?)");
+    private static final String SQL_VERIFICAR_DOCENTECLASE =("SELECT COUNT(*) FROM DocenteClase WHERE ciDocente = ? AND idClase = ?");
     public Conexion cone = new Conexion();
     public PreparedStatement ps;
     public ResultSet rs;
     private boolean resultado;
+    
+    
+    
+    public boolean verificarAsignacionDocenteClase(String ciDocente, String idClase) throws Exception {
+    
+    
+    try (Connection con = cone.getConnection();
+         PreparedStatement ps = con.prepareStatement(SQL_AGREGAR_DOCENTECLASE)) {
+        
+        ps.setString(1, ciDocente);
+        ps.setString(2, idClase);
+        
+        try (ResultSet rs = ps.executeQuery()) {
+            if (rs.next()) {
+                
+                return rs.getInt(1) > 0; 
+            }
+        }
+    } catch (SQLException e) {
+        throw new Exception("Error de LA BASE DE DATOS al verificar la asignación : " + e.getMessage());
+    }
+    return false;
+}
+    public boolean verificarDocentePorCI(String ciDocente) throws Exception {
+    
+    String sql = "SELECT COUNT(*) FROM usuario WHERE ciUsuario = ? AND rol = 'Docente'";
+    
+    try (Connection con = cone.getConnection();
+         PreparedStatement ps = con.prepareStatement(sql)) {
+        
+        ps.setString(1, ciDocente);
+        
+        try (ResultSet rs = ps.executeQuery()) {
+            if (rs.next()) {
+                return rs.getInt(1) > 0; // Si el conteo es > 0, es docente.
+            }
+        }
+    } catch (SQLException e) {
+        throw new Exception("Error de conexión/SQL al verificar docente: " + e.getMessage());
+    }
+    return false;
+}
     
     public void asignarDocenteClase(String ciDocente, String idClase)throws Exception {
       try{
@@ -50,7 +93,7 @@ public class Registro {
     }  
     }
 
-    public void registroUsuario(String nombreUsuario, String contraseña, String ci, String rol) throws Exception {
+    public void registroUsuario(String ciUsuario, String nombre, String contraseña, String rol) throws Exception {
 
         
 
@@ -59,9 +102,9 @@ public class Registro {
             conn = cone.getConnection();
             ps = conn.prepareStatement(SQL_REGISTRO);
 
-            ps.setString(1, nombreUsuario);
-            ps.setString(2, contraseña);
-            ps.setString(3, ci);
+            ps.setString(1, ciUsuario);
+            ps.setString(2, nombre);
+            ps.setString(3, contraseña);
             ps.setString(4, rol);
 
             int resultado = ps.executeUpdate();
@@ -81,7 +124,7 @@ public class Registro {
         }
     }
 
-    public String iniciar(String ci, String contraseña) throws Exception {
+    public String iniciar(String ciUsuario, String contraseña) throws Exception {
         String rolObtenido = null;
         String usuarioObtenido = null;
         String resultadoString = null;
@@ -92,7 +135,7 @@ public class Registro {
             con = cone.getConnection();
             ps = con.prepareStatement(SQL_LOGIN);
 
-            ps.setString(1, ci);
+            ps.setString(1, ciUsuario);
             ps.setString(2, contraseña);
            
 
@@ -100,7 +143,7 @@ public class Registro {
 
             if (rs.next()) {
                 rolObtenido = rs.getString("rol");
-                usuarioObtenido = rs.getString("nombreUsuario");
+                usuarioObtenido = rs.getString("nombre");
                 resultadoString = rolObtenido + "|" + usuarioObtenido;
 
             }
@@ -114,7 +157,7 @@ public class Registro {
         
     return resultadoString;
     }
-    public void RegistrarFalta(String desde, String hasta, String motivo, String ciDocente, String idClase) throws Exception {
+    public void RegistrarFalta(String fechaInicio, String fechaFin, String motivo, String ciDocente, String idClase) throws Exception {
         
         
         
@@ -123,8 +166,8 @@ public class Registro {
             ps = con.prepareStatement(SQL_REGISTRAR_FALTA);
         
             
-            ps.setString(1, desde);
-            ps.setString(2, hasta);
+            ps.setString(1, fechaInicio);
+            ps.setString(2, fechaFin);
             ps.setString(3, motivo);
             ps.setString(4, ciDocente);
             ps.setString(5, idClase);
