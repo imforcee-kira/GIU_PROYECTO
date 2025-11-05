@@ -123,7 +123,10 @@ public class GIU_Admin extends javax.swing.JFrame {
     }//GEN-LAST:event_btnVentanaRegistrarActionPerformed
 
     private void btnVentanaAgregarAlumnoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnVentanaAgregarAlumnoActionPerformed
-        // TODO add your handling code here:
+
+        AgregarAlumno ventanaAlumno = new AgregarAlumno();
+        ventanaAlumno.setVisible(true);
+        
     }//GEN-LAST:event_btnVentanaAgregarAlumnoActionPerformed
 
     private void btnAgregarDocenteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarDocenteActionPerformed

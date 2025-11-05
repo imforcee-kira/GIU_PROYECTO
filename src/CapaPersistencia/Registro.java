@@ -9,6 +9,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 import javax.security.auth.login.Configuration;
 
 public class Registro {
@@ -19,7 +20,13 @@ public class Registro {
     private static final String SQL_REGISTRAR_FALTA = ("INSERT INTO faltas (fechaInicio, fechaFin, motivo,ciDocente, idClase) VALUES (?, ?, ?, ?,?)");
     private static final String SQL_BUSCAR_DOCENTE = ("SELECT ciUsuario FROM usuario WHERE rol = 'Docente'");
     private static final String SQL_AGREGAR_DOCENTECLASE = ("INSERT INTO docenteclase(ciDocente, idClase) VALUES(?,?)");
-    private static final String SQL_VERIFICAR_DOCENTECLASE =("SELECT COUNT(*) FROM DocenteClase WHERE ciDocente = ? AND idClase = ?");
+    private static final String SQL_VERIFICAR_DOCENTECLASE =("SELECT COUNT(*) FROM docenteclase WHERE ciDocente = ? AND idClase = ?");
+    private static final String SQL_BUSCARFALTA = ("SELECT T1.fechaInicio, T1.fechaFin, T1.motivo, T2.nombre" +
+                 "FROM falta T1 " +
+                 "JOIN suario T2 ON T1.ciDocente = T2.ciUsuario " + 
+                 "WHERE T1.idClase = ? " +
+                 "ORDER BY T1.fechaInicio DESC");
+    private static final String SQL_BUSCARCLASE_POR_ESTUDIANTE =("SELECT idClase FROM usuario WHERE ciUsuario = ? AND rol = 'Alumno' ");
     public Conexion cone = new Conexion();
     public PreparedStatement ps;
     public ResultSet rs;
@@ -27,11 +34,92 @@ public class Registro {
     
     
     
+    
+    
+    
+    public void asignarClaseAEstudiante(String ciEstudiante, String idClase) throws Exception {
+    
+    // 💥 NUEVO SQL: UPDATE para modificar la columna idClase en la tabla usuarios
+    String sql = "UPDATE usuario SET idClase = ? WHERE ciUsuario = ?";
+    
+    try (Connection con = cone.getConnection(); // O cone.getConnection()
+         PreparedStatement ps = con.prepareStatement(sql)) {
+        
+        ps.setString(1, idClase);
+        ps.setString(2, ciEstudiante);
+        
+        int filasAfectadas = ps.executeUpdate();
+        
+        if (filasAfectadas == 0) {
+            throw new Exception("La C.I. del alumno no existe o la asignación no se pudo realizar.");
+        }
+        
+    } catch (SQLException e) {
+        throw new Exception("Error al asignar clase: " + e.getMessage());
+    }
+}
+    public String buscarIdClasePorEstudiante(String ciEstudiante) throws Exception {
+    // Usamos try-with-resources para asegurar que la conexión y el PreparedStatement se cierren.
+    // **Asegúrate de que 'getConnection()' sea tu método real de conexión a DB**
+    try (Connection con = cone.getConnection(); 
+         PreparedStatement ps = con.prepareStatement(SQL_BUSCARCLASE_POR_ESTUDIANTE)) {
+        
+        ps.setString(1, ciEstudiante);
+        
+        try (ResultSet rs = ps.executeQuery()) {
+            if (rs.next()) {
+                // Si se encuentra, retorna el ID de la clase
+                return rs.getString("idClase"); 
+            }
+        }
+    } catch (SQLException e) {
+        // En caso de error de DB, lanza una excepción que será atrapada en la GUI
+        throw new Exception("Error de base de datos al buscar la clase del estudiante: " + e.getMessage());
+    }
+    
+    // Retorna null si la C.I. no se encontró en la tabla Estudiante
+    return null; 
+}
+    public static List<Object[]> buscarFaltasPorClase(String idClase) throws Exception {
+    List<Object[]> filasFaltas = new ArrayList<>();
+    
+    // Consulta SQL: T1.fechaDesde, T1.fechaHasta, T1.motivo, T2.nombreCompleto
+    String sql = "SELECT T1.fechaInicio, T1.fechaFin, T1.motivo, T2.nombre " +
+                 "FROM faltas T1 " + 
+                 "JOIN usuario T2 ON T1.ciDocente = T2.ciUsuario " + 
+                 "WHERE T1.idClase = ? " +
+                 "ORDER BY T1.fechaInicio DESC";
+    
+    // Asume que 'obtenerConexionEstatica()' o equivalente existe y retorna la conexión.
+    try (Connection con = Conexion.getConnection();
+         PreparedStatement ps = con.prepareStatement(sql)) {
+        
+        ps.setString(1, idClase);
+        
+        try (ResultSet rs = ps.executeQuery()) {
+            
+            while (rs.next()) {
+                // Array de 4 objetos (para FechaInicio, FechaFin, Motivo, Profesor)
+                Object[] fila = new Object[4];
+                fila[0] = rs.getString("fechaInicio"); 
+                fila[1] = rs.getString("fechaFin"); 
+                fila[2] = rs.getString("motivo");     
+                fila[3] = rs.getString("nombre");
+                
+                filasFaltas.add(fila);
+            }
+        }
+    } catch (SQLException e) {
+        throw new Exception("Error de DB al buscar las faltas por clase: " + e.getMessage());
+    }
+    
+    return filasFaltas;
+}
     public boolean verificarAsignacionDocenteClase(String ciDocente, String idClase) throws Exception {
     
     
     try (Connection con = cone.getConnection();
-         PreparedStatement ps = con.prepareStatement(SQL_AGREGAR_DOCENTECLASE)) {
+         PreparedStatement ps = con.prepareStatement(SQL_VERIFICAR_DOCENTECLASE)) {
         
         ps.setString(1, ciDocente);
         ps.setString(2, idClase);
