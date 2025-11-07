@@ -12,7 +12,7 @@ import java.sql.PreparedStatement;
 public class Conexion {
 
     
-    private static final String URL = "jdbc:mysql://localhost:3307/project?useSSL=false&serverTimezone=UTC";
+    private static final String URL = "jdbc:mysql://localhost:3308/project?useSSL=false&serverTimezone=UTC";
     private static final String USUARIO = "root";
     private static final String CLAVE = ""; 
 

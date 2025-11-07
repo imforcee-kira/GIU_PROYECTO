@@ -22,11 +22,12 @@ public class Registro {
     private static final String SQL_AGREGAR_DOCENTECLASE = ("INSERT INTO docenteclase(ciDocente, idClase) VALUES(?,?)");
     private static final String SQL_VERIFICAR_DOCENTECLASE =("SELECT COUNT(*) FROM docenteclase WHERE ciDocente = ? AND idClase = ?");
     private static final String SQL_BUSCARFALTA = ("SELECT T1.fechaInicio, T1.fechaFin, T1.motivo, T2.nombre" +
-                 "FROM falta T1 " +
-                 "JOIN suario T2 ON T1.ciDocente = T2.ciUsuario " + 
+                 "FROM faltas T1 " +
+                 "JOIN usuario T2 ON T1.ciDocente = T2.ciUsuario " + 
                  "WHERE T1.idClase = ? " +
                  "ORDER BY T1.fechaInicio DESC");
     private static final String SQL_BUSCARCLASE_POR_ESTUDIANTE =("SELECT idClase FROM usuario WHERE ciUsuario = ? AND rol = 'Alumno' ");
+    private static final String SQL_BUSCARFALTA_POR_DOCENTE = ("SELECT fechaInicio, fechaFin, motivo, idClase FROM faltas WHERE ciDocente = ? ORDER BY fechaInicio DESC");
     public Conexion cone = new Conexion();
     public PreparedStatement ps;
     public ResultSet rs;
@@ -35,14 +36,36 @@ public class Registro {
     
     
     
+    public List<Object[]> buscarFaltasPorDocente(String ciDocente) throws Exception {
+    List<Object[]> faltas = new ArrayList<>();
     
+    try (Connection con = cone.getConnection();
+         PreparedStatement ps = con.prepareStatement(SQL_BUSCARFALTA_POR_DOCENTE)) {
+        
+        ps.setString(1, ciDocente);
+        
+        try (ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {   
+                Object[] fila = new Object[4];
+                fila[0] = rs.getString("fechaInicio");
+                fila[1] = rs.getString("fechaFin");
+                fila[2] = rs.getString("motivo");
+                fila[3] = rs.getString("idClase"); 
+            }
+        }
+    } catch (SQLException e) {
+        System.err.println("ERROR SQL al buscar faltas de docente: " + e.getMessage());
+        throw new Exception("Fallo en la consulta de faltas registradas: " + e.getMessage());
+    }
+    return faltas;
+}
     
     public void asignarClaseAEstudiante(String ciEstudiante, String idClase) throws Exception {
     
-    // 💥 NUEVO SQL: UPDATE para modificar la columna idClase en la tabla usuarios
+    
     String sql = "UPDATE usuario SET idClase = ? WHERE ciUsuario = ?";
     
-    try (Connection con = cone.getConnection(); // O cone.getConnection()
+    try (Connection con = cone.getConnection();
          PreparedStatement ps = con.prepareStatement(sql)) {
         
         ps.setString(1, idClase);
@@ -59,8 +82,6 @@ public class Registro {
     }
 }
     public String buscarIdClasePorEstudiante(String ciEstudiante) throws Exception {
-    // Usamos try-with-resources para asegurar que la conexión y el PreparedStatement se cierren.
-    // **Asegúrate de que 'getConnection()' sea tu método real de conexión a DB**
     try (Connection con = cone.getConnection(); 
          PreparedStatement ps = con.prepareStatement(SQL_BUSCARCLASE_POR_ESTUDIANTE)) {
         
@@ -68,29 +89,29 @@ public class Registro {
         
         try (ResultSet rs = ps.executeQuery()) {
             if (rs.next()) {
-                // Si se encuentra, retorna el ID de la clase
+                
                 return rs.getString("idClase"); 
             }
         }
     } catch (SQLException e) {
-        // En caso de error de DB, lanza una excepción que será atrapada en la GUI
+        
         throw new Exception("Error de base de datos al buscar la clase del estudiante: " + e.getMessage());
     }
     
-    // Retorna null si la C.I. no se encontró en la tabla Estudiante
+    
     return null; 
 }
     public static List<Object[]> buscarFaltasPorClase(String idClase) throws Exception {
     List<Object[]> filasFaltas = new ArrayList<>();
     
-    // Consulta SQL: T1.fechaDesde, T1.fechaHasta, T1.motivo, T2.nombreCompleto
+   
     String sql = "SELECT T1.fechaInicio, T1.fechaFin, T1.motivo, T2.nombre " +
                  "FROM faltas T1 " + 
                  "JOIN usuario T2 ON T1.ciDocente = T2.ciUsuario " + 
                  "WHERE T1.idClase = ? " +
                  "ORDER BY T1.fechaInicio DESC";
     
-    // Asume que 'obtenerConexionEstatica()' o equivalente existe y retorna la conexión.
+   
     try (Connection con = Conexion.getConnection();
          PreparedStatement ps = con.prepareStatement(sql)) {
         
@@ -99,7 +120,7 @@ public class Registro {
         try (ResultSet rs = ps.executeQuery()) {
             
             while (rs.next()) {
-                // Array de 4 objetos (para FechaInicio, FechaFin, Motivo, Profesor)
+               
                 Object[] fila = new Object[4];
                 fila[0] = rs.getString("fechaInicio"); 
                 fila[1] = rs.getString("fechaFin"); 
@@ -146,7 +167,7 @@ public class Registro {
         
         try (ResultSet rs = ps.executeQuery()) {
             if (rs.next()) {
-                return rs.getInt(1) > 0; // Si el conteo es > 0, es docente.
+                return rs.getInt(1) > 0; 
             }
         }
     } catch (SQLException e) {
@@ -292,7 +313,7 @@ public class Registro {
                     throw new Exception("Error al cargar la lista de docentes: " + e.getMessage());
                     }
     
-                    return listaCI; // Devuelve la lista de CIs de docentes
+                    return listaCI; 
 }
                 
                 

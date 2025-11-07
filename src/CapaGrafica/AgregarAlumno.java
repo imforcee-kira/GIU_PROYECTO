@@ -18,8 +18,16 @@ public class AgregarAlumno extends javax.swing.JFrame {
     /**
      * Creates new form AgregarAlumno
      */
-    public AgregarAlumno() {
+    private static String ciAdmin;
+    private static String rolUsuarioLogueado;
+    private static String nombreUsuarioLogueado;
+    public AgregarAlumno(String ci, String rol, String nombre) {
+        this.ciAdmin = ci;
+        this.rolUsuarioLogueado = rol;
+        this.nombreUsuarioLogueado = nombre;
         initComponents();
+        setLocationRelativeTo(null);
+        this.setResizable(false);
     }
 
     /**
@@ -38,6 +46,7 @@ public class AgregarAlumno extends javax.swing.JFrame {
         comboCLASE = new javax.swing.JComboBox<>();
         jLabel3 = new javax.swing.JLabel();
         btnAgregarAlumno = new javax.swing.JButton();
+        btnAtras = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -69,6 +78,13 @@ public class AgregarAlumno extends javax.swing.JFrame {
             }
         });
 
+        btnAtras.setText("Atras");
+        btnAtras.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAtrasActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -81,14 +97,17 @@ public class AgregarAlumno extends javax.swing.JFrame {
                 .addGap(70, 70, 70))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                 .addContainerGap(35, Short.MAX_VALUE)
-                .addComponent(txtCIALUMNO, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(33, 33, 33)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btnAgregarAlumno)
+                    .addComponent(btnAtras)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(26, 26, 26)
-                        .addComponent(comboCLASE, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(txtCIALUMNO, javax.swing.GroupLayout.PREFERRED_SIZE, 87, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(33, 33, 33)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(btnAgregarAlumno)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 94, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(26, 26, 26)
+                                .addComponent(comboCLASE, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                 .addGap(53, 53, 53))
         );
         jPanel1Layout.setVerticalGroup(
@@ -105,7 +124,9 @@ public class AgregarAlumno extends javax.swing.JFrame {
                     .addComponent(comboCLASE, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(42, 42, 42)
                 .addComponent(btnAgregarAlumno)
-                .addContainerGap(106, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 51, Short.MAX_VALUE)
+                .addComponent(btnAtras)
+                .addGap(32, 32, 32))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -129,40 +150,46 @@ public class AgregarAlumno extends javax.swing.JFrame {
     private void btnAgregarAlumnoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarAlumnoActionPerformed
         Registro registroDB = new Registro();
     
-    // 1. Obtener datos de la GUI
+    
     String ciAlumno = txtCIALUMNO.getText().trim(); // Asumiendo un campo de texto para la CI
     String idClaseSeleccionada = comboCLASE.getSelectedItem().toString();
 
-    // 2. Validaciones básicas
+    
     if (ciAlumno.isEmpty() || ciAlumno.length() < 7) {
         JOptionPane.showMessageDialog(this, "Debe ingresar una C.I. válida.", "Error de Datos", JOptionPane.WARNING_MESSAGE);
         return;
     }
 
     try {
-        // 3. Ejecutar la asignación
+        
         registroDB.asignarClaseAEstudiante(ciAlumno, idClaseSeleccionada);
 
-        // 4. Mostrar éxito
+       
         JOptionPane.showMessageDialog(this, 
             "Clase " + idClaseSeleccionada + " asignada correctamente a la CI: " + ciAlumno, 
             "Asignación Exitosa", JOptionPane.INFORMATION_MESSAGE);
         
-        // Limpiar campos
+        
         txtCIALUMNO.setText("");
 
     } catch (Exception e) {
-        // 5. Mostrar errores de DB (si el alumno no existe o error de conexión)
         JOptionPane.showMessageDialog(this, 
             "Fallo al asignar clase: " + e.getMessage(), 
             "Error de Base de Datos", JOptionPane.ERROR_MESSAGE);
-        
+        }   
     }//GEN-LAST:event_btnAgregarAlumnoActionPerformed
-    }
+
+    private void btnAtrasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAtrasActionPerformed
+        GIU_Admin ventana = new GIU_Admin(ciAdmin, rolUsuarioLogueado, nombreUsuarioLogueado);
+        ventana.setVisible(true);
+        dispose();
+    }//GEN-LAST:event_btnAtrasActionPerformed
+
     
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAgregarAlumno;
+    private javax.swing.JButton btnAtras;
     private javax.swing.JComboBox<String> comboCLASE;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;

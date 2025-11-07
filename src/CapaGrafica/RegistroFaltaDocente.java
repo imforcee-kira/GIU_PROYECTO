@@ -20,6 +20,7 @@ public class RegistroFaltaDocente extends javax.swing.JFrame {
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(RegistroFaltaDocente.class.getName());
     private final String ciDocentelogueado;
     private final String rolUsuariologueado;
+    private final String nombreDocentelogueado;
 
     
     
@@ -29,26 +30,27 @@ public class RegistroFaltaDocente extends javax.swing.JFrame {
     /**
      * Creates new form RegistroFaltaDocente
      */
-    public RegistroFaltaDocente(String ci, String rol) {
+    public RegistroFaltaDocente(String ci, String rol, String nombre) {
         
         
         this.ciDocentelogueado = ci;
         this.rolUsuariologueado = rol;
-        
+        this.nombreDocentelogueado = nombre;
         initComponents();
         
         boolean isAdmin = "Admin".equals(rol);
     
-    // Hacemos el campo de la C.I. ausente visible/invisible
+    
     if (txtDocenteAusente != null) {
         txtDocenteAusente.setVisible(isAdmin);
     }
-    // Asumiendo que existe una etiqueta para ese campo:
-    if (labelCIDOCENTE != null) { // Reemplazando el antiguo labelCIDOCENTE
+    
+    if (labelCIDOCENTE != null) { 
         labelCIDOCENTE.setVisible(isAdmin);
     }
-        
+       this.setResizable(false); 
     }
+    
 
    
 
@@ -216,22 +218,20 @@ public class RegistroFaltaDocente extends javax.swing.JFrame {
     private void btnRegistrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegistrarActionPerformed
         String ciDocente = this.ciDocentelogueado; 
     
-    // Obtener la clase seleccionada 
+    
     String idClaseSeleccionada = comboCLASEDOCENTE.getSelectedItem().toString();
     String motivo = comboMotivo.getSelectedItem().toString();
-
-    // Obtener y formatear las fechas
     SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
     String formatoDesde = (desdeChooser.getDate() != null) ? format.format(desdeChooser.getDate()) : null;
     String formatoHasta = (hastaChooser.getDate() != null) ? format.format(hastaChooser.getDate()) : null;
     
-    // 2. Validaciones de campos vacíos (Tus validaciones)
+    
     if (formatoDesde == null || formatoHasta == null || idClaseSeleccionada == null || motivo == null) {
         JOptionPane.showMessageDialog(this, "Debe completar todos los campos.", "Error de Datos", JOptionPane.WARNING_MESSAGE);
         return;
     }
 
-    // Si el usuario por error selecciona "No hay clases asignadas" (si es una opción fija)
+  
     
 
     Registro registroDB = new Registro();
@@ -268,7 +268,7 @@ public class RegistroFaltaDocente extends javax.swing.JFrame {
     }//GEN-LAST:event_txtDocenteAusenteActionPerformed
 
     private void btnAtrasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAtrasActionPerformed
-        GIU_Docente ventana = new GIU_Docente(ciDocentelogueado,rolUsuariologueado);
+        GIU_Docente ventana = new GIU_Docente(ciDocentelogueado,rolUsuariologueado,nombreDocentelogueado);
         ventana.setVisible(true);
         dispose();
         

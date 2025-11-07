@@ -4,8 +4,11 @@
  */
 package CapaGrafica;
 
+import CapaPersistencia.Registro;
+import java.util.List;
 import javax.swing.*;
 import javax.swing.JButton;
+import javax.swing.table.DefaultTableModel;
 /**
  *
  * @author eze
@@ -15,14 +18,50 @@ import javax.swing.JButton;
 public class GIU_Docente extends javax.swing.JFrame {
     private String ciDocente;
     private String RolUsuario;
+    private String nombreUsuario;
+    private DefaultTableModel modeloTabla;
     /**
      * Creates new form GIU_Docente
      */
-    public GIU_Docente(String ci, String rol) {
+    public GIU_Docente(String ci, String rol, String nombre) {
         this.ciDocente = ci;
         this.RolUsuario = rol;
+        this.nombreUsuario = nombre;
         initComponents();
+        txtnombreUsuario.setText(nombreUsuario);
+        setLocationRelativeTo(null);
+        this.setResizable(false);
+        modeloTabla = new DefaultTableModel(
+            new Object[]{"Fecha Desde", "Fecha Hasta", "Motivo", "Clase Registrada"}, 0);
         
+        tablaFaltasRegistradas.setModel(modeloTabla); 
+        
+        cargarTablaFaltasRegistradas(); 
+        
+        
+    }
+    private void cargarTablaFaltasRegistradas() {
+        Registro registroDB = new Registro();
+        System.out.print("Ci dle docente logueado es: "+ this.ciDocente);
+        
+
+        modeloTabla.setRowCount(0); 
+
+        try {
+            List<Object[]> faltas = registroDB.buscarFaltasPorDocente(this.ciDocente);
+            
+            if (faltas.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Usted no ha registrado faltas aún.");
+                return;
+            }
+            
+            for (Object[] fila : faltas) {
+                modeloTabla.addRow(fila);
+            }
+            
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error al cargar las faltas registradas: " + e.getMessage(), "Error de DB", JOptionPane.ERROR_MESSAGE);
+        }
     }
 
     
@@ -39,13 +78,20 @@ public class GIU_Docente extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         btnRegistrarFalta1 = new javax.swing.JButton();
+        txtnombreUsuario = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        tablaFaltasRegistradas = new javax.swing.JTable();
+        jMenuBar1 = new javax.swing.JMenuBar();
+        jMenu1 = new javax.swing.JMenu();
+        menuCerrarsesion = new javax.swing.JMenuItem();
+        menuSalir = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jPanel1.setBackground(new java.awt.Color(51, 204, 255));
 
         jLabel1.setBackground(new java.awt.Color(0, 0, 0));
-        jLabel1.setFont(new java.awt.Font("Segoe UI", 0, 24)); // NOI18N
+        jLabel1.setFont(new java.awt.Font("Segoe UI Black", 1, 18)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(0, 0, 0));
         jLabel1.setText("Docente");
 
@@ -56,32 +102,75 @@ public class GIU_Docente extends javax.swing.JFrame {
             }
         });
 
+        txtnombreUsuario.setFont(new java.awt.Font("Segoe UI Black", 1, 18)); // NOI18N
+        txtnombreUsuario.setText("a");
+
+        tablaFaltasRegistradas.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        jScrollPane1.setViewportView(tablaFaltasRegistradas);
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(23, 23, 23)
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(266, Short.MAX_VALUE))
-            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                    .addContainerGap(276, Short.MAX_VALUE)
-                    .addComponent(btnRegistrarFalta1)
-                    .addGap(22, 22, 22)))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 111, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtnombreUsuario, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 375, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 26, Short.MAX_VALUE)
+                .addComponent(btnRegistrarFalta1)
+                .addGap(16, 16, 16))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(15, 15, 15)
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(242, Short.MAX_VALUE))
-            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                .addGroup(jPanel1Layout.createSequentialGroup()
-                    .addGap(45, 45, 45)
-                    .addComponent(btnRegistrarFalta1)
-                    .addContainerGap(232, Short.MAX_VALUE)))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtnombreUsuario)
+                    .addComponent(btnRegistrarFalta1))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 275, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
+
+        jMenu1.setIcon(new javax.swing.ImageIcon("C:\\Users\\ezequ\\Downloads\\menu_16dp_000000_FILL0_wght400_GRAD0_opsz20.png")); // NOI18N
+        jMenu1.setText("File");
+
+        menuCerrarsesion.setIcon(new javax.swing.ImageIcon("C:\\Users\\ezequ\\Downloads\\logout_16dp_000000_FILL0_wght400_GRAD0_opsz20.png")); // NOI18N
+        menuCerrarsesion.setText("Cerrar sesion");
+        menuCerrarsesion.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuCerrarsesionActionPerformed(evt);
+            }
+        });
+        jMenu1.add(menuCerrarsesion);
+
+        menuSalir.setIcon(new javax.swing.ImageIcon("C:\\Users\\ezequ\\Downloads\\close_16dp_000000_FILL0_wght400_GRAD0_opsz20.png")); // NOI18N
+        menuSalir.setText("Salir");
+        menuSalir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuSalirActionPerformed(evt);
+            }
+        });
+        jMenu1.add(menuSalir);
+
+        jMenuBar1.add(jMenu1);
+
+        setJMenuBar(jMenuBar1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -100,9 +189,36 @@ public class GIU_Docente extends javax.swing.JFrame {
     private void btnRegistrarFalta1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegistrarFalta1ActionPerformed
         String cidelDocente = this.ciDocente;
         String roldelDocente = this.RolUsuario;
-        RegistroFaltaDocente ventanaRegistro = new RegistroFaltaDocente(cidelDocente,roldelDocente);
+        RegistroFaltaDocente ventanaRegistro = new RegistroFaltaDocente(cidelDocente,roldelDocente,nombreUsuario);
         ventanaRegistro.setVisible(true);
+        dispose();
     }//GEN-LAST:event_btnRegistrarFalta1ActionPerformed
+
+    private void menuCerrarsesionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuCerrarsesionActionPerformed
+int confirm = JOptionPane.showConfirmDialog(this,
+        "¿Está seguro que desea cerrar la sesión actual?", 
+        "Confirmar Cierre de Sesión", 
+        JOptionPane.YES_NO_OPTION,
+        JOptionPane.QUESTION_MESSAGE);
+
+    if (confirm == JOptionPane.YES_OPTION) {
+        this.dispose(); 
+        
+        
+        GIU_LOGIN login = new GIU_LOGIN(); 
+        login.setVisible(true);
+    }    }//GEN-LAST:event_menuCerrarsesionActionPerformed
+
+    private void menuSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuSalirActionPerformed
+int confirm = JOptionPane.showConfirmDialog(this,
+        "¿Está seguro que desea cerrar el programa por completo?", 
+        "Confirmar Salida", 
+        JOptionPane.YES_NO_OPTION,
+        JOptionPane.WARNING_MESSAGE); 
+
+    if (confirm == JOptionPane.YES_OPTION) {
+        System.exit(0); 
+    }    }//GEN-LAST:event_menuSalirActionPerformed
 
     /**
      * @param args the command line arguments
@@ -111,6 +227,13 @@ public class GIU_Docente extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnRegistrarFalta1;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JMenu jMenu1;
+    private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JMenuItem menuCerrarsesion;
+    private javax.swing.JMenuItem menuSalir;
+    private javax.swing.JTable tablaFaltasRegistradas;
+    private javax.swing.JLabel txtnombreUsuario;
     // End of variables declaration//GEN-END:variables
 }

@@ -18,8 +18,16 @@ public class AgregarDocente extends javax.swing.JFrame {
     /**
      * Creates new form AgregarDocente
      */
-    public AgregarDocente() {
+    private static String ciAdmin;
+    private static String rolUsuarioLogueado;
+    private static String nombreAdminlogueado;
+    public AgregarDocente(String ci, String rol,String nombre) {
+        this.ciAdmin = ci; 
+        this.rolUsuarioLogueado = rol;
+        this.nombreAdminlogueado = nombre;
         initComponents();
+        setLocationRelativeTo(null);
+        this.setResizable(false);
     }
 
     /**
@@ -173,13 +181,15 @@ String ciDocente = txtCIDOCENTE.getText().trim(); // C.I. del campo de texto
         comboCLASE.setSelectedIndex(0);
         
     } catch (Exception e) {
-        // Captura el error de clave duplicada si ya existe la asignación
+        
         JOptionPane.showMessageDialog(this, "Fallo en la asignación: " + e.getMessage(), "Error de Base de Datos", JOptionPane.ERROR_MESSAGE);
     }
     }//GEN-LAST:event_btnAgregarDocenteActionPerformed
 
     private void btnAtrasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAtrasActionPerformed
-//       GIU_Admin ventana = new GIU_Admin(ciDocente, rol);
+        GIU_Admin ventana = new GIU_Admin(ciAdmin, rolUsuarioLogueado,nombreAdminlogueado);
+        ventana.setVisible(true);
+        dispose();
     }//GEN-LAST:event_btnAtrasActionPerformed
 
     /**
